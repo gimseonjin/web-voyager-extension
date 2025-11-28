@@ -1,85 +1,67 @@
-# 🚀 Web Voyager Chrome Extension
+# Web Voyager Extension
 
-AI 기반 브라우저 자동화 Chrome 확장 프로그램입니다. 자연어 명령으로 웹페이지를 조작할 수 있습니다.
+Claude AI 기반 웹 자동화 Chrome 확장 프로그램입니다. 자연어 명령으로 웹페이지를 조작할 수 있습니다.
 
-## ✨ 주요 기능
+## 데모
 
-- 🖼️ **스크린샷 캡처**: 현재 페이지를 자동으로 캡처
-- 🎯 **요소 마킹**: 클릭 가능한 요소를 번호로 표시
-- 🤖 **AI 자동화**: Chrome DevTools Protocol을 통한 정밀한 브라우저 제어
-- 💬 **자연어 인터페이스**: "구글에서 ChatGPT 검색해줘" 같은 명령 지원
-- ⚡ **실시간 피드백**: 작업 진행 상황을 실시간으로 확인
+[![Watch the video](https://img.youtube.com/vi/8_VFAAFScOg/hqdefault.jpg)](https://youtu.be/8_VFAAFScOg)
 
-## 🏗️ 아키텍처
+## 주요 기능
 
-### Core Components
-- **Background Service**: Chrome-Browser-Tab-Document 계층 구조
-- **CDP Integration**: Chrome DevTools Protocol을 통한 브라우저 제어
-- **Element Marker**: 클릭 가능한 요소 감지 및 마킹
-- **AI Agent**: 멀티스텝 자동화 컨트롤러
-- **Side Panel UI**: React 기반 채팅 인터페이스
+- **스크린샷 캡처**: 현재 페이지를 자동으로 캡처
+- **요소 마킹**: 클릭 가능한 요소를 번호로 표시
+- **AI 자동화**: Chrome DevTools Protocol을 통한 정밀한 브라우저 제어
+- **자연어 인터페이스**: "구글에서 ChatGPT 검색해줘" 같은 명령 지원
 
-### 지원 액션
-- ✅ **Click**: 요소 클릭
-- ✅ **Type**: 텍스트 입력 (기존 내용 삭제 후 입력)
-- ✅ **Scroll**: 페이지 스크롤
-- ✅ **Navigate**: 페이지 이동
-- ✅ **Wait**: 대기
-- ✅ **Screenshot**: 스크린샷 캡처
+## 지원 액션
 
-## 🚀 설치 및 실행
+- **Click**: 요소 클릭
+- **Type**: 텍스트 입력
+- **Scroll**: 페이지/요소 스크롤
+- **Navigate**: 페이지 이동
+- **Wait**: 대기
 
-### 1. 개발 환경 설정
+## 설치 및 실행
+
 ```bash
-# Node.js 22+ 필요 (Volta 사용 권장)
+# 의존성 설치
 npm install
+
+# 개발 서버 실행
+npm run dev
+
+# 프로덕션 빌드
+npm run build
 ```
 
-### 2. 개발 서버 실행
-```bash
-# Node.js 22로 개발 서버 실행
-PATH="/Users/$(whoami)/.volta/tools/image/node/22.21.1/bin:$PATH" npm run dev
-```
+### Chrome에 확장 프로그램 로드
 
-### 3. Chrome에서 확장 프로그램 로드
 1. `chrome://extensions` 접속
 2. 개발자 모드 ON
 3. "압축해제된 확장 프로그램 로드" 클릭
 4. `dist` 폴더 선택
 
-### 4. 사용법
+## 사용법
+
 1. 웹페이지에서 Extension 아이콘 클릭
 2. Side Panel 열기
-3. 자연어 명령 입력 (예: "구글에서 ChatGPT 검색해줘")
-4. AI가 자동으로 작업 수행
+3. Claude API 키 입력
+4. 자연어 명령 입력 (예: "구글에서 ChatGPT 검색해줘")
+5. AI가 자동으로 작업 수행
 
-## 💡 사용 예시
+## 기술 스택
 
-### 검색 작업
-```
-"구글에서 ChatGPT 검색해줘"
-"OpenAI에 대해 검색해봐"
-```
+- **Framework**: React 19 + TypeScript
+- **Build Tool**: Vite + CRXJS Plugin
+- **AI**: LangChain + Anthropic Claude API
+- **Chrome APIs**: Manifest V3, Debugger API, Tabs API
+- **Automation**: Chrome DevTools Protocol
 
-### 요소 조작
-```
-"로그인 버튼 클릭해줘"
-"이 페이지에서 아래로 스크롤해줘"
-"첫 번째 링크 클릭해줘"
-```
+## 프로젝트 구조
 
-### 페이지 이동
-```
-"구글로 이동해줘"
-"이전 페이지로 돌아가줘"
-```
-
-## 🛠️ 개발
-
-### 프로젝트 구조
 ```
 src/
-├── background/           # Background Service Worker
+├── background/          # Background Service Worker
 │   ├── main.ts          # 진입점
 │   ├── chrome-controller.ts
 │   ├── browser.ts
@@ -92,81 +74,176 @@ src/
 ├── sidepanel/           # Side Panel UI
 │   ├── App.tsx          # React 채팅 인터페이스
 │   ├── agent-controller.ts
-│   └── claude-api.ts    # AI API 클라이언트
+│   └── claude-api.ts    # Claude API 클라이언트
 └── shared/
     └── types.ts         # 공용 타입 정의
 ```
 
-### 핵심 클래스
+## 아키텍처
 
-#### ChromeController
-- 전역 윈도우/탭 관리
-- Chrome 이벤트 처리
+### 시스템 구조
 
-#### CDPSession
-- Chrome DevTools Protocol 연결
-- 스크린샷, 클릭, 타이핑, 스크롤 구현
+```mermaid
+flowchart TB
+    subgraph Chrome Extension
+        subgraph SidePanel["Side Panel (React UI)"]
+            App[App.tsx]
+            AC[AgentController]
+            Claude[ClaudeAPIClient]
+        end
 
-#### ElementMarker
-- 클릭 가능한 요소 감지
-- 번호 오버레이 마커 표시
+        subgraph Background["Background Service Worker"]
+            BG[BackgroundService]
+            CC[ChromeController]
+            Browser[Browser]
+            Tab[Tab]
+            CDP[CDPSession]
+            Doc[Document]
+        end
 
-#### AgentController
-- 멀티스텝 AI 자동화
-- 스크래치패드를 통한 상태 관리
+        subgraph Content["Content Script"]
+            Main[main.tsx]
+            Marker[ElementMarker]
+        end
+    end
 
-## 🔧 기술 스택
+    subgraph External
+        API[Claude API]
+        Page[Web Page DOM]
+    end
 
-- **Framework**: React 19 + TypeScript
-- **Build Tool**: Vite 7.2.4 + CRXJS Plugin
-- **Chrome APIs**: Manifest V3, Debugger API, Tabs API
-- **Automation**: Chrome DevTools Protocol
-- **Node.js**: 22.21.1 (Volta 관리)
+    App --> AC
+    AC --> Claude
+    Claude <-->|LangChain| API
 
-## 📝 제한사항
+    AC <-->|chrome.runtime.sendMessage| BG
+    BG --> CC
+    CC --> Browser
+    Browser --> Tab
+    Tab --> CDP
+    Tab --> Doc
 
-현재 MVP 버전의 제한사항:
-- AI API 연동은 데모 로직 (실제 Claude API 연동 필요)
-- 복잡한 멀티스텝 작업은 제한적
-- Shadow DOM 요소 처리 미지원
-- 일부 SPA 페이지에서 안정성 이슈 가능
-
-## 🔮 향후 계획
-
-- [ ] **실제 Claude API 연동**
-- [ ] **더 정교한 요소 감지**
-- [ ] **복잡한 워크플로우 지원**
-- [ ] **에러 복구 메커니즘**
-- [ ] **Shadow DOM 지원**
-- [ ] **멀티 탭 작업 지원**
-- [ ] **성능 최적화**
-
-## 🐛 문제 해결
-
-### 개발 서버 실행 시 Node.js 버전 오류
-```bash
-# Volta로 Node.js 22 설치
-volta install node@22
-volta pin node@22
-
-# 또는 직접 경로 지정
-PATH="/Users/$(whoami)/.volta/tools/image/node/22.21.1/bin:$PATH" npm run dev
+    CDP <-->|Chrome Debugger API| Page
+    Doc <-->|chrome.tabs.sendMessage| Main
+    Main --> Marker
+    Marker -->|DOM 조작| Page
 ```
 
-### Extension 로드 실패
-1. `dist` 폴더가 생성되었는지 확인
-2. Chrome 개발자 모드가 활성화되었는지 확인
-3. 다른 버전의 확장 프로그램 제거 후 재시도
+### 클래스 다이어그램
 
-### 디버깅
-- Background Service Worker 로그: `chrome://extensions` > 확장 프로그램 > Service Worker 검사
-- Content Script 로그: 웹페이지에서 F12 > Console
-- Side Panel 로그: Side Panel에서 F12
+```mermaid
+classDiagram
+    class BackgroundService {
+        -ChromeController chromeController
+        +initialize()
+        +handleMessage(message)
+    }
 
-## 📄 라이선스
+    class ChromeController {
+        -Map~number, Browser~ browsers
+        -number activeWindowId
+        +initialize()
+        +getCurrentTab() Tab
+        +onTabActivated(tabId, windowId)
+        +onTabUpdated(tabId, url)
+    }
 
-MIT License
+    class Browser {
+        -number windowId
+        -Map~number, Tab~ tabs
+        -number activeTabId
+        +createTab(tabId, url) Tab
+        +getTab(tabId) Tab
+        +setActiveTab(tabId)
+    }
 
----
+    class Tab {
+        -number tabId
+        -Document document
+        -CDPSession cdpSession
+        +initialize()
+        +captureScreenshot() ScreenshotData
+        +executeAction(action, elements)
+    }
 
-**🎯 Web Voyager는 AI와 브라우저 자동화의 미래를 보여주는 MVP입니다!**# web-voyager-extension
+    class CDPSession {
+        -number tabId
+        -boolean connected
+        +connect()
+        +disconnect()
+        +captureScreenshot() ScreenshotData
+        +simulateClick(x, y)
+        +simulateType(text)
+        +simulateScroll(direction, amount)
+    }
+
+    class Document {
+        -Tab tab
+        -MarkedElement[] elements
+        +markElements() MarkedElement[]
+        +clearMarkers()
+        +getElementById(id) MarkedElement
+    }
+
+    class AgentController {
+        -ClaudeAPIClient claudeClient
+        -number maxSteps
+        -string scratchpad
+        +runAgent(query) AgentResult
+        +stop()
+    }
+
+    class ClaudeAPIClient {
+        -ChatAnthropic model
+        +analyzePage(screenshot, elements, query) Prediction
+        +setApiKey(apiKey)
+    }
+
+    class ElementMarker {
+        -Map~number, HTMLElement~ markers
+        -MarkedElement[] markedElements
+        +markClickableElements() MarkedElement[]
+        +clearMarkers()
+    }
+
+    BackgroundService --> ChromeController
+    ChromeController --> Browser
+    Browser --> Tab
+    Tab --> CDPSession
+    Tab --> Document
+    AgentController --> ClaudeAPIClient
+    Document ..> ElementMarker : messages
+```
+
+### 메시지 흐름
+
+```mermaid
+sequenceDiagram
+    participant SP as Side Panel
+    participant BG as Background
+    participant CDP as CDPSession
+    participant CS as Content Script
+
+    SP->>BG: CAPTURE_SCREENSHOT
+    BG->>CDP: captureScreenshot()
+    CDP-->>BG: ScreenshotData
+    BG-->>SP: screenshot
+
+    SP->>BG: MARK_ELEMENTS
+    BG->>CS: MARK_ELEMENTS
+    CS->>CS: ElementMarker.markClickableElements()
+    CS-->>BG: MarkedElement[]
+    BG-->>SP: elements
+
+    SP->>SP: ClaudeAPI.analyzePage()
+    Note over SP: AI가 다음 액션 결정
+
+    SP->>BG: EXECUTE_ACTION
+    BG->>CDP: executeAction(click/type/scroll)
+    CDP-->>BG: success
+    BG-->>SP: result
+
+    SP->>BG: CLEAR_MARKERS
+    BG->>CS: CLEAR_MARKERS
+    CS->>CS: ElementMarker.clearMarkers()
+```
